@@ -30,6 +30,7 @@ void GameLevel::Load(const char *file, unsigned int levelWidth,
 void GameLevel::Draw(SpriteRenderer &renderer) {
   for (GameObject &tile : this->Walls) tile.Draw(renderer);
   if (this->Player) this->Player->Draw(renderer);
+  if (this->Imposter) this->Imposter->Draw(renderer);
 }
 
 bool GameLevel::IsCompleted() {
@@ -46,6 +47,9 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData,
 
   float unit_width = levelWidth / static_cast<float>(width),
         unit_height = levelHeight / height;
+
+  this->UnitHeight = unit_height;
+  this->UnitWidth = unit_width;
 
   for (unsigned int y = 0; y < height; ++y) {
     for (unsigned int x = 0; x < width; ++x) {
@@ -64,6 +68,12 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData,
       if (tileData[y][x] == 2) {
         this->Player =
             new GameObject(pos, size, ResourceManager::GetTexture("player"),
+                           glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
+      }
+
+      if (tileData[y][x] == 3) {
+        this->Imposter =
+            new GameObject(pos, size, ResourceManager::GetTexture("imposter"),
                            glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
       }
     }

@@ -13,6 +13,8 @@ class GameLevel {
  public:
   std::vector<GameObject> Walls;
   GameObject *Player;
+  GameObject *Imposter;
+  unsigned int UnitWidth, UnitHeight;
 
   GameLevel() {}
 
