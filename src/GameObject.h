@@ -21,6 +21,7 @@ class GameObject {
              glm::vec2 velocity = glm::vec2(0.0f, 0.0f));
 
   virtual void Draw(SpriteRenderer &renderer);
+  bool CheckCollision(GameObject obj);
 };
 
 #endif

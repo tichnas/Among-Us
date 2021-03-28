@@ -12,6 +12,7 @@
 class GameLevel {
  public:
   std::vector<GameObject> Walls;
+  GameObject *Player;
 
   GameLevel() {}
 

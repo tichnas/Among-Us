@@ -6,7 +6,7 @@
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
 
-SpriteRenderer *Renderer;
+SpriteRenderer* Renderer;
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height) {}
@@ -29,12 +29,41 @@ void Game::Init() {
   // load textures
   ResourceManager::LoadTexture("../textures/awesomeface.png", true, "face");
   ResourceManager::LoadTexture("../textures/wall.png", true, "wall");
+  ResourceManager::LoadTexture("../textures/player.png", true, "player");
   this->Level.Load("../levels/one.lvl", this->Width, this->Height);
 }
 
 void Game::Update(float dt) {}
 
-void Game::ProcessInput(float dt) {}
+void Game::ProcessInput(float dt) {
+  if (this->State == GAME_ACTIVE) {
+    GameObject* Player = this->Level.Player;
+    std::vector<GameObject> walls = this->Level.Walls;
+    glm::vec2 move(0.0f, 0.0f);
+
+    if (this->Keys[GLFW_KEY_A]) {
+      move -= glm::vec2(Player->Velocity.x, 0);
+    }
+    if (this->Keys[GLFW_KEY_D]) {
+      move += glm::vec2(Player->Velocity.x, 0);
+    }
+    if (this->Keys[GLFW_KEY_S]) {
+      move += glm::vec2(0, Player->Velocity.y);
+    }
+    if (this->Keys[GLFW_KEY_W]) {
+      move -= glm::vec2(0, Player->Velocity.y);
+    }
+
+    Player->Position += move;
+
+    for (GameObject wall : walls) {
+      if (Player->CheckCollision(wall)) {
+        Player->Position -= move;
+        break;
+      }
+    }
+  }
+}
 
 void Game::Render() {
   Texture2D myTexture = ResourceManager::GetTexture("face");

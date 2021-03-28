@@ -29,6 +29,7 @@ void GameLevel::Load(const char *file, unsigned int levelWidth,
 
 void GameLevel::Draw(SpriteRenderer &renderer) {
   for (GameObject &tile : this->Walls) tile.Draw(renderer);
+  if (this->Player) this->Player->Draw(renderer);
 }
 
 bool GameLevel::IsCompleted() {
@@ -46,18 +47,24 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData,
   float unit_width = levelWidth / static_cast<float>(width),
         unit_height = levelHeight / height;
 
-  std::cout << width << ' ' << height << '\n'
-            << levelWidth << ' ' << levelHeight << '\n';
-
   for (unsigned int y = 0; y < height; ++y) {
     for (unsigned int x = 0; x < width; ++x) {
+      std::cerr << tileData[y][x];
+      if (!tileData[y][x]) continue;
+
+      glm::vec2 pos(unit_width * x, unit_height * y);
+      glm::vec2 size(unit_width, unit_height);
+
       if (tileData[y][x] == 1) {
-        std::cout << unit_height * y << ' ' << unit_height << '\n';
-        glm::vec2 pos(unit_width * x, unit_height * y);
-        glm::vec2 size(unit_width, unit_height);
         GameObject obj(pos, size, ResourceManager::GetTexture("wall"),
                        glm::vec3(1.0f, 1.0f, 1.0f));
         this->Walls.push_back(obj);
+      }
+
+      if (tileData[y][x] == 2) {
+        this->Player =
+            new GameObject(pos, size, ResourceManager::GetTexture("player"),
+                           glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
       }
     }
   }

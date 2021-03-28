@@ -21,3 +21,12 @@ void GameObject::Draw(SpriteRenderer &renderer) {
   renderer.DrawSprite(this->Sprite, this->Position, this->Size, this->Rotation,
                       this->Color);
 }
+
+bool GameObject::CheckCollision(GameObject obj) {
+  bool collisionX = this->Position.x + this->Size.x > obj.Position.x &&
+                    obj.Position.x + obj.Size.x > this->Position.x;
+  bool collisionY = this->Position.y + this->Size.y > obj.Position.y &&
+                    obj.Position.y + obj.Size.y > this->Position.y;
+
+  return collisionX && collisionY;
+}
