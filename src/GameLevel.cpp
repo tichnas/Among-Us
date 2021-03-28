@@ -17,6 +17,8 @@ void GameLevel::Load(const char *file, unsigned int levelWidth,
   if (fstream) {
     while (std::getline(fstream, line))  // read each line from level file
     {
+      if (!line.size() || line[0] == '#') continue;
+
       std::istringstream sstream(line);
       std::vector<unsigned int> row;
       while (sstream >> tileCode)  // read each word separated by spaces
@@ -29,8 +31,10 @@ void GameLevel::Load(const char *file, unsigned int levelWidth,
 
 void GameLevel::Draw(SpriteRenderer &renderer) {
   for (GameObject &tile : this->Walls) tile.Draw(renderer);
+
   if (this->Player) this->Player->Draw(renderer);
   if (this->Imposter) this->Imposter->Draw(renderer);
+  if (this->VaporiseBtn) this->VaporiseBtn->Draw(renderer);
 }
 
 bool GameLevel::IsCompleted() {
@@ -75,6 +79,11 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData,
         this->Imposter =
             new GameObject(pos, size, ResourceManager::GetTexture("imposter"),
                            glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
+      }
+
+      if (tileData[y][x] == 4) {
+        this->VaporiseBtn =
+            new GameObject(pos, size, ResourceManager::GetTexture("vaporise"));
       }
     }
   }

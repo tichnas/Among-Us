@@ -30,10 +30,10 @@ void Game::Init() {
   Shader myShader = ResourceManager::GetShader("sprite");
   Renderer = new SpriteRenderer(myShader);
   // load textures
-  ResourceManager::LoadTexture("../textures/awesomeface.png", true, "face");
   ResourceManager::LoadTexture("../textures/wall.png", true, "wall");
   ResourceManager::LoadTexture("../textures/player.png", true, "player");
   ResourceManager::LoadTexture("../textures/imposter.png", true, "imposter");
+  ResourceManager::LoadTexture("../textures/vaporise.png", true, "vaporise");
   this->Level.Load("../levels/one.lvl", this->Width, this->Height);
 }
 
@@ -112,18 +112,34 @@ glm::vec2 bestMovement(std::vector<GameObject> walls, int width, int height,
 void Game::Update(float dt) {
   if (this->State == GAME_ACTIVE) {
     GameObject* Imposter = this->Level.Imposter;
-    std::vector<GameObject> walls = this->Level.Walls;
-    glm::vec2 move(0.0f, 0.0f);
+    GameObject* Player = this->Level.Player;
+    GameObject* VaporiseBtn = this->Level.VaporiseBtn;
 
-    if ((int)Imposter->Position.x % this->Level.UnitWidth ||
-        (int)Imposter->Position.y % this->Level.UnitHeight)
-      move = lastImposterMove;
-    else
-      move = lastImposterMove =
-          bestMovement(walls, this->Width, this->Height, this->Level.UnitWidth,
-                       this->Level.UnitHeight, this->Level.Player, Imposter);
+    if (Imposter) {
+      std::vector<GameObject> walls = this->Level.Walls;
+      glm::vec2 move(0.0f, 0.0f);
 
-    Imposter->Position += move;
+      if ((int)Imposter->Position.x % this->Level.UnitWidth ||
+          (int)Imposter->Position.y % this->Level.UnitHeight)
+        move = lastImposterMove;
+      else
+        move = lastImposterMove = bestMovement(
+            walls, this->Width, this->Height, this->Level.UnitWidth,
+            this->Level.UnitHeight, Player, Imposter);
+
+      Imposter->Position += move;
+
+      if (Imposter->CheckCollision(*Player)) {
+        exit(0);
+      }
+    }
+
+    if (VaporiseBtn) {
+      if (Player->CheckCollision(*VaporiseBtn)) {
+        this->Level.Imposter = NULL;
+        this->Level.VaporiseBtn = NULL;
+      }
+    }
   }
 }
 
@@ -158,10 +174,6 @@ void Game::ProcessInput(float dt) {
 }
 
 void Game::Render() {
-  Texture2D myTexture = ResourceManager::GetTexture("face");
-  Renderer->DrawSprite(myTexture, glm::vec2(200.0f, 200.0f),
-                       glm::vec2(300.0f, 400.0f), 45.0f,
-                       glm::vec3(0.0f, 1.0f, 0.0f));
   if (this->State == GAME_ACTIVE) {
     this->Level.Draw(*Renderer);
     ;

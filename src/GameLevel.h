@@ -14,6 +14,7 @@ class GameLevel {
   std::vector<GameObject> Walls;
   GameObject *Player;
   GameObject *Imposter;
+  GameObject *VaporiseBtn;
   unsigned int UnitWidth, UnitHeight;
 
   GameLevel() {}
