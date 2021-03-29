@@ -34,7 +34,12 @@ void Game::Init() {
   ResourceManager::LoadTexture("../textures/player.png", true, "player");
   ResourceManager::LoadTexture("../textures/imposter.png", true, "imposter");
   ResourceManager::LoadTexture("../textures/vaporise.png", true, "vaporise");
+  ResourceManager::LoadTexture("../textures/release.png", true, "release");
+  ResourceManager::LoadTexture("../textures/coin.png", true, "power");
+  ResourceManager::LoadTexture("../textures/rock.png", true, "obstacle");
   this->Level.Load("../levels/one.lvl", this->Width, this->Height);
+
+  this->Score = 0;
 }
 
 glm::vec2 bestMovement(std::vector<GameObject> walls, int width, int height,
@@ -114,6 +119,7 @@ void Game::Update(float dt) {
     GameObject* Imposter = this->Level.Imposter;
     GameObject* Player = this->Level.Player;
     GameObject* VaporiseBtn = this->Level.VaporiseBtn;
+    GameObject* ReleaseBtn = this->Level.ReleaseBtn;
 
     if (Imposter) {
       std::vector<GameObject> walls = this->Level.Walls;
@@ -127,7 +133,7 @@ void Game::Update(float dt) {
             walls, this->Width, this->Height, this->Level.UnitWidth,
             this->Level.UnitHeight, Player, Imposter);
 
-      Imposter->Position += move;
+      Imposter->Position += 0.05f * move;
 
       if (Imposter->CheckCollision(*Player)) {
         exit(0);
@@ -138,6 +144,43 @@ void Game::Update(float dt) {
       if (Player->CheckCollision(*VaporiseBtn)) {
         this->Level.Imposter = NULL;
         this->Level.VaporiseBtn = NULL;
+      }
+    }
+
+    if (ReleaseBtn) {
+      if (Player->CheckCollision(*ReleaseBtn)) {
+        this->Level.ReleaseBtn = NULL;
+      }
+    } else {
+      std::vector<GameObject>* powers = &(this->Level.Powers);
+      std::vector<GameObject>* obstacles = &(this->Level.Obstacles);
+
+      bool check = true;
+
+      while (check) {
+        check = false;
+        for (int i = 0; i < (*powers).size(); i++) {
+          if (Player->CheckCollision((*powers)[i])) {
+            check = true;
+            (*powers).erase((*powers).begin() + i);
+            this->Score += 10;
+            break;
+          }
+        }
+      }
+
+      check = true;
+
+      while (check) {
+        check = false;
+        for (int i = 0; i < (*obstacles).size(); i++) {
+          if (Player->CheckCollision((*obstacles)[i])) {
+            check = true;
+            (*obstacles).erase((*obstacles).begin() + i);
+            this->Score -= 10;
+            break;
+          }
+        }
       }
     }
   }
@@ -161,6 +204,8 @@ void Game::ProcessInput(float dt) {
     if (this->Keys[GLFW_KEY_W]) {
       move -= glm::vec2(0, Player->Velocity.y);
     }
+
+    move *= 0.05f;
 
     Player->Position += move;
 

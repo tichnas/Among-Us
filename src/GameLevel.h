@@ -15,6 +15,9 @@ class GameLevel {
   GameObject *Player;
   GameObject *Imposter;
   GameObject *VaporiseBtn;
+  GameObject *ReleaseBtn;
+  std::vector<GameObject> Powers;
+  std::vector<GameObject> Obstacles;
   unsigned int UnitWidth, UnitHeight;
 
   GameLevel() {}

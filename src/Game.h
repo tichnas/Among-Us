@@ -11,6 +11,7 @@ class Game {
   GameLevel Level;
   bool Keys[1024];
   unsigned int Width, Height;
+  unsigned int Score;
 
   Game(unsigned int width, unsigned int height);
   ~Game();

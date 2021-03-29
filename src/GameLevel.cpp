@@ -35,6 +35,12 @@ void GameLevel::Draw(SpriteRenderer &renderer) {
   if (this->Player) this->Player->Draw(renderer);
   if (this->Imposter) this->Imposter->Draw(renderer);
   if (this->VaporiseBtn) this->VaporiseBtn->Draw(renderer);
+  if (this->ReleaseBtn) {
+    this->ReleaseBtn->Draw(renderer);
+  } else {
+    for (GameObject &power : this->Powers) power.Draw(renderer);
+    for (GameObject &obstacle : this->Obstacles) obstacle.Draw(renderer);
+  }
 }
 
 bool GameLevel::IsCompleted() {
@@ -70,20 +76,37 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData,
       }
 
       if (tileData[y][x] == 2) {
-        this->Player =
-            new GameObject(pos, size, ResourceManager::GetTexture("player"),
-                           glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
+        this->Player = new GameObject(
+            pos, 0.9f * size, ResourceManager::GetTexture("player"),
+            glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
       }
 
       if (tileData[y][x] == 3) {
-        this->Imposter =
-            new GameObject(pos, size, ResourceManager::GetTexture("imposter"),
-                           glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
+        this->Imposter = new GameObject(
+            pos, 0.9f * size, ResourceManager::GetTexture("imposter"),
+            glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
       }
 
       if (tileData[y][x] == 4) {
         this->VaporiseBtn =
             new GameObject(pos, size, ResourceManager::GetTexture("vaporise"));
+      }
+
+      if (tileData[y][x] == 5) {
+        this->ReleaseBtn =
+            new GameObject(pos, size, ResourceManager::GetTexture("release"));
+      }
+
+      if (tileData[y][x] == 6) {
+        GameObject obj(pos, size, ResourceManager::GetTexture("power"),
+                       glm::vec3(1.0f, 1.0f, 1.0f));
+        this->Powers.push_back(obj);
+      }
+
+      if (tileData[y][x] == 7) {
+        GameObject obj(pos, size, ResourceManager::GetTexture("obstacle"),
+                       glm::vec3(1.0f, 1.0f, 1.0f));
+        this->Obstacles.push_back(obj);
       }
     }
   }
