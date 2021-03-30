@@ -224,6 +224,16 @@ void Game::ProcessInput(float dt) {
         break;
       }
     }
+
+    if (Player->Position.x < 0 ||
+        Player->Position.x + Player->Size.x >= this->Width ||
+        Player->Position.y < 0 ||
+        Player->Position.y + Player->Size.y >= this->Height) {
+      if (this->Level.IsCompleted())
+        exit(0);
+      else
+        Player->Position -= move;
+    }
   }
 }
 

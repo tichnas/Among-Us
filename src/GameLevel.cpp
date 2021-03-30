@@ -44,10 +44,8 @@ void GameLevel::Draw(SpriteRenderer &renderer) {
 }
 
 bool GameLevel::IsCompleted() {
-  // for (GameObject &tile : this->Bricks)
-  //   if (!tile.IsSolid && !tile.Destroyed) return false;
-  // return true;
-  return false;
+  if (this->ReleaseBtn || this->VaporiseBtn) return false;
+  return true;
 }
 
 void GameLevel::init(std::vector<std::vector<unsigned int>> tileData,
