@@ -1,6 +1,8 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
+#include <sstream>
+
 #include "GameLevel.h"
 
 enum GameState { GAME_ACTIVE, GAME_MENU, GAME_WIN };
@@ -12,6 +14,7 @@ class Game {
   bool Keys[1024];
   unsigned int Width, Height;
   unsigned int Score;
+  float Time;
 
   Game(unsigned int width, unsigned int height);
   ~Game();

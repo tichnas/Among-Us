@@ -7,8 +7,10 @@
 
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
+#include "TextRenderer.h"
 
 SpriteRenderer* Renderer;
+TextRenderer* Text;
 glm::vec2 lastImposterMove;
 
 Game::Game(unsigned int width, unsigned int height)
@@ -29,6 +31,9 @@ void Game::Init() {
   // set render-specific controls
   Shader myShader = ResourceManager::GetShader("sprite");
   Renderer = new SpriteRenderer(myShader);
+  // setup text
+  Text = new TextRenderer(this->Width, this->Height);
+  Text->Load("../fonts/arial.ttf", 24);
   // load textures
   ResourceManager::LoadTexture("../textures/wall.png", true, "wall");
   ResourceManager::LoadTexture("../textures/player.png", true, "player");
@@ -40,6 +45,7 @@ void Game::Init() {
   this->Level.Load("../levels/one.lvl", this->Width, this->Height);
 
   this->Score = 0;
+  this->Time = 10;
 }
 
 glm::vec2 bestMovement(std::vector<GameObject> walls, int width, int height,
@@ -116,6 +122,9 @@ glm::vec2 bestMovement(std::vector<GameObject> walls, int width, int height,
 
 void Game::Update(float dt) {
   if (this->State == GAME_ACTIVE) {
+    this->Time -= dt;
+    if (this->Time <= 0) exit(0);
+
     GameObject* Imposter = this->Level.Imposter;
     GameObject* Player = this->Level.Player;
     GameObject* VaporiseBtn = this->Level.VaporiseBtn;
@@ -221,7 +230,22 @@ void Game::ProcessInput(float dt) {
 void Game::Render() {
   if (this->State == GAME_ACTIVE) {
     this->Level.Draw(*Renderer);
-    ;
+
+    int tasks = 2;
+    if (this->Level.ReleaseBtn) tasks--;
+    if (this->Level.VaporiseBtn) tasks--;
+
+    std::stringstream ss;
+    ss << "Score: ";
+    ss << this->Score;
+    ss << "  |  ";
+    ss << "Tasks: ";
+    ss << tasks;
+    ss << "/2";
+    ss << "  |  ";
+    ss << "Time: ";
+    ss << (int)this->Time;
+    Text->RenderText(ss.str(), 5.0f, 5.0f, 1.0f, glm::vec3(1.0f, 0.0f, 0.0f));
   }
 }
 
