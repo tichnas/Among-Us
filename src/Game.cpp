@@ -37,8 +37,10 @@ void Game::Init() {
   Text->Load("../fonts/arial.ttf", 24);
   // load textures
   ResourceManager::LoadTexture("../textures/wall.png", true, "wall");
-  ResourceManager::LoadTexture("../textures/player.png", true, "player");
-  ResourceManager::LoadTexture("../textures/imposter.png", true, "imposter");
+  ResourceManager::LoadTexture("../textures/playerL.png", true, "playerL");
+  ResourceManager::LoadTexture("../textures/playerR.png", true, "playerR");
+  ResourceManager::LoadTexture("../textures/imposterL.png", true, "imposterL");
+  ResourceManager::LoadTexture("../textures/imposterR.png", true, "imposterR");
   ResourceManager::LoadTexture("../textures/vaporise.png", true, "vaporise");
   ResourceManager::LoadTexture("../textures/release.png", true, "release");
   ResourceManager::LoadTexture("../textures/coin.png", true, "power");
@@ -51,7 +53,7 @@ void Game::Init() {
   this->Level.Load(result.c_str(), this->Width, this->Height);
 
   this->Score = 0;
-  this->Time = 10;
+  this->Time = 30;
 }
 
 glm::vec2 bestMovement(std::vector<GameObject> walls, int width, int height,
@@ -150,6 +152,11 @@ void Game::Update(float dt) {
 
       Imposter->Position += 0.05f * move;
 
+      if (move.x > 0)
+        Imposter->UpdateSprite(ResourceManager::GetTexture("imposterR"));
+      if (move.x < 0)
+        Imposter->UpdateSprite(ResourceManager::GetTexture("imposterL"));
+
       if (Imposter->CheckCollision(*Player)) {
         exit(0);
       }
@@ -209,9 +216,11 @@ void Game::ProcessInput(float dt) {
 
     if (this->Keys[GLFW_KEY_A]) {
       move -= glm::vec2(Player->Velocity.x, 0);
+      Player->UpdateSprite(ResourceManager::GetTexture("playerL"));
     }
     if (this->Keys[GLFW_KEY_D]) {
       move += glm::vec2(Player->Velocity.x, 0);
+      Player->UpdateSprite(ResourceManager::GetTexture("playerR"));
     }
     if (this->Keys[GLFW_KEY_S]) {
       move += glm::vec2(0, Player->Velocity.y);

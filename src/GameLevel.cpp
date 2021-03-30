@@ -75,13 +75,13 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData,
 
       if (tileData[y][x] == 2) {
         this->Player = new GameObject(
-            pos, 0.9f * size, ResourceManager::GetTexture("player"),
+            pos, 0.8f * size, ResourceManager::GetTexture("playerR"),
             glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
       }
 
       if (tileData[y][x] == 3) {
         this->Imposter = new GameObject(
-            pos, 0.9f * size, ResourceManager::GetTexture("imposter"),
+            pos, 0.8f * size, ResourceManager::GetTexture("imposterR"),
             glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f));
       }
 

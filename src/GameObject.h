@@ -20,6 +20,8 @@ class GameObject {
              glm::vec3 color = glm::vec3(1.0f),
              glm::vec2 velocity = glm::vec2(0.0f, 0.0f));
 
+  void UpdateSprite(Texture2D sprite);
+
   virtual void Draw(SpriteRenderer &renderer);
   bool CheckCollision(GameObject obj);
 };
