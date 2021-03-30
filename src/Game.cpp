@@ -4,6 +4,7 @@
 #include "Game.h"
 
 #include <queue>
+#include <string>
 
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
@@ -42,7 +43,12 @@ void Game::Init() {
   ResourceManager::LoadTexture("../textures/release.png", true, "release");
   ResourceManager::LoadTexture("../textures/coin.png", true, "power");
   ResourceManager::LoadTexture("../textures/rock.png", true, "obstacle");
-  this->Level.Load("../levels/one.lvl", this->Width, this->Height);
+  // load level
+  std::string prefix = "../levels/";
+  std::string postfix = ".lvl";
+  std::string levels[] = {"1", "2", "3", "4"};
+  std::string result = prefix + levels[rand() % 4] + postfix;
+  this->Level.Load(result.c_str(), this->Width, this->Height);
 
   this->Score = 0;
   this->Time = 10;

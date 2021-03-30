@@ -1,5 +1,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include <iostream>
 
@@ -16,6 +18,8 @@ const unsigned int SCREEN_HEIGHT = 600;
 Game Among(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 int main(int argc, char* argv[]) {
+  srand(time(0));
+
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
