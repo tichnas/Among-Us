@@ -34,17 +34,23 @@ void Game::Init() {
   Renderer = new SpriteRenderer(myShader);
   // setup text
   Text = new TextRenderer(this->Width, this->Height);
-  Text->Load("../fonts/arial.ttf", 24);
+  Text->Load("../assets/fonts/arial.ttf", 24);
   // load textures
-  ResourceManager::LoadTexture("../textures/wall.png", true, "wall");
-  ResourceManager::LoadTexture("../textures/playerL.png", true, "playerL");
-  ResourceManager::LoadTexture("../textures/playerR.png", true, "playerR");
-  ResourceManager::LoadTexture("../textures/imposterL.png", true, "imposterL");
-  ResourceManager::LoadTexture("../textures/imposterR.png", true, "imposterR");
-  ResourceManager::LoadTexture("../textures/vaporise.png", true, "vaporise");
-  ResourceManager::LoadTexture("../textures/release.png", true, "release");
-  ResourceManager::LoadTexture("../textures/coin.png", true, "power");
-  ResourceManager::LoadTexture("../textures/rock.png", true, "obstacle");
+  ResourceManager::LoadTexture("../assets/textures/wall.png", true, "wall");
+  ResourceManager::LoadTexture("../assets/textures/playerL.png", true,
+                               "playerL");
+  ResourceManager::LoadTexture("../assets/textures/playerR.png", true,
+                               "playerR");
+  ResourceManager::LoadTexture("../assets/textures/imposterL.png", true,
+                               "imposterL");
+  ResourceManager::LoadTexture("../assets/textures/imposterR.png", true,
+                               "imposterR");
+  ResourceManager::LoadTexture("../assets/textures/vaporise.png", true,
+                               "vaporise");
+  ResourceManager::LoadTexture("../assets/textures/release.png", true,
+                               "release");
+  ResourceManager::LoadTexture("../assets/textures/coin.png", true, "power");
+  ResourceManager::LoadTexture("../assets/textures/rock.png", true, "obstacle");
   // load level
   std::string prefix = "../levels/";
   std::string postfix = ".lvl";
